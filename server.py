@@ -5,18 +5,22 @@ from typing import Dict
 from mcp.server.fastmcp import FastMCP
 from temporalio.client import Client
 
+from workflows import InvoiceWorkflow
+
 
 async def _client() -> Client:
     return await Client.connect(os.getenv("TEMPORAL_ADDRESS", "localhost:7233"))
 
+
 mcp = FastMCP("invoice_processor")
+
 
 @mcp.tool()
 async def trigger(invoice: Dict) -> Dict[str, str]:
     """Start the InvoiceWorkflow with the given invoice JSON."""
     client = await _client()
     handle = await client.start_workflow(
-        "workflows.InvoiceWorkflow.run",
+        InvoiceWorkflow.run,
         invoice,
         id=f"invoice-{uuid.uuid4()}",
         task_queue="invoice-task-queue",
@@ -50,5 +54,6 @@ async def status(workflow_id: str, run_id: str) -> str:
     desc = await handle.describe()
     return desc.status.name
 
+
 if __name__ == "__main__":
-    mcp.run(transport='stdio')
+    mcp.run(transport="stdio")
