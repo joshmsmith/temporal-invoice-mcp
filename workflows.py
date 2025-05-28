@@ -25,7 +25,9 @@ class PayLineItem:
         delay = (due - workflow.now()).total_seconds()
         if delay > 0:
             await workflow.sleep(delay)
-        activity_opts = workflow.activity_options(
+        await workflow.execute_activity(
+            payment_gateway,
+            line,
             start_to_close_timeout=timedelta(seconds=30),
             retry_policy=RetryPolicy(
                 initial_interval=timedelta(seconds=1),
@@ -34,8 +36,6 @@ class PayLineItem:
                 non_retryable_error_types=["INSUFFICIENT_FUNDS"],
             ),
         )
-        async with workflow.activity(activity_opts):
-            await payment_gateway(line)
 
 
 @workflow.defn
@@ -53,7 +53,9 @@ class InvoiceWorkflow:
 
     @workflow.run
     async def run(self, invoice: dict) -> str:
-        validate_opts = workflow.activity_options(
+        await workflow.execute_activity(
+            validate_against_erp,
+            invoice,
             start_to_close_timeout=timedelta(seconds=30),
             retry_policy=RetryPolicy(
                 initial_interval=timedelta(seconds=1),
@@ -61,8 +63,6 @@ class InvoiceWorkflow:
                 maximum_attempts=5,
             ),
         )
-        async with workflow.activity(validate_opts):
-            await validate_against_erp(invoice)
 
         await workflow.wait_condition(
             lambda: self.approved is not None,
