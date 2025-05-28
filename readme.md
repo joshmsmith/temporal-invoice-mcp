@@ -28,7 +28,8 @@
 ```
 
 Use your MCP client (e.g., Claude Desktop) to call the `trigger`, `approve`,
-`reject`, and `status` tools. The sample invoice lives at
-`samples/invoice_acme.json`. Inspect Temporal Web at
-`http://localhost:8233`. Kill and restart the worker at any time to observe
-deterministic replay.
+`reject`, and `status` tools. The `trigger` tool now returns both the
+`workflow_id` and `run_id` of the started workflow. Pass these values to the
+`approve`, `reject`, and `status` tools. The sample invoice lives at
+`samples/invoice_acme.json`. Inspect Temporal Web at `http://localhost:8233`.
+Kill and restart the worker at any time to observe deterministic replay.

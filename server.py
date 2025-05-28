@@ -12,7 +12,7 @@ async def _client() -> Client:
 mcp = FastMCP("invoice_processor")
 
 @mcp.tool()
-async def trigger(invoice: Dict) -> str:
+async def trigger(invoice: Dict) -> Dict[str, str]:
     """Start the InvoiceWorkflow with the given invoice JSON."""
     client = await _client()
     handle = await client.start_workflow(
@@ -21,32 +21,32 @@ async def trigger(invoice: Dict) -> str:
         id=f"invoice-{uuid.uuid4()}",
         task_queue="invoice-task-queue",
     )
-    return handle.run_id
+    return {"workflow_id": handle.id, "run_id": handle.run_id}
 
 
 @mcp.tool()
-async def approve(run_id: str) -> str:
+async def approve(workflow_id: str, run_id: str) -> str:
     """Signal approval for the invoice workflow."""
     client = await _client()
-    handle = client.get_workflow_handle(workflow_id="", run_id=run_id)
+    handle = client.get_workflow_handle(workflow_id=workflow_id, run_id=run_id)
     await handle.signal("ApproveInvoice")
     return "APPROVED"
 
 
 @mcp.tool()
-async def reject(run_id: str) -> str:
+async def reject(workflow_id: str, run_id: str) -> str:
     """Signal rejection for the invoice workflow."""
     client = await _client()
-    handle = client.get_workflow_handle(workflow_id="", run_id=run_id)
+    handle = client.get_workflow_handle(workflow_id=workflow_id, run_id=run_id)
     await handle.signal("RejectInvoice")
     return "REJECTED"
 
 
 @mcp.tool()
-async def status(run_id: str) -> str:
+async def status(workflow_id: str, run_id: str) -> str:
     """Return current status of the workflow."""
     client = await _client()
-    handle = client.get_workflow_handle(workflow_id="", run_id=run_id)
+    handle = client.get_workflow_handle(workflow_id=workflow_id, run_id=run_id)
     desc = await handle.describe()
     return desc.status.name
 
