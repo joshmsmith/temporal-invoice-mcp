@@ -1,28 +1,30 @@
-# 1. Clone & install
+# Invoice Demo with Temporal + MCP
 
-git clone https://github.com/your-org/temporal-mcp-invoice-demo.git
-cd temporal-mcp-invoice-demo
-pip install -r requirements.txt # temporalio, mcp_tool, click
+## 1. Clone & install
+```
+ git clone https://github.com/your-org/temporal-mcp-invoice-demo.git
+ cd temporal-mcp-invoice-demo
+ pip install temporalio fastmcp mcp_tool click
+```
 
-# 2. Launch Temporal locally
+## 2. Launch Temporal locally
+```
+ temporal server start-dev
+```
 
-temporal server start-dev # Temporal Server + Web
+## 3. Start the worker
+```
+ export TEMPORAL_ADDRESS=localhost:7233
+ python worker.py [--fail-validate] [--fail-payment]
+```
 
-# 3. Start the worker
+## 4. Start the MCP server
+```
+ python server.py
+```
 
-export TEMPORAL_ADDRESS=localhost:7233
-python worker.py
-
-# 4. Kick off a run
-
-python cli.py trigger samples/invoice_acme.json
-
-# copy the run-id from the output
-
-# 5. Approve the invoice
-
-python cli.py approve <RUN_ID>
-
-# 6. Watch history
-
-open http://localhost:8233
+Use your MCP client (e.g., Claude Desktop) to call the `trigger`, `approve`,
+`reject`, and `status` tools. The sample invoice lives at
+`samples/invoice_acme.json`. Inspect Temporal Web at
+`http://localhost:8233`. Kill and restart the worker at any time to observe
+deterministic replay.
