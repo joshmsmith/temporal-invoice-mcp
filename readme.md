@@ -27,6 +27,12 @@
  python server.py
 ```
 
+### Claude for Desktop Instructions (Sonnet 4)
+
+```
+trigger samples/invoice_acme.json
+```
+
 Use your MCP client (e.g., Claude Desktop) to call the `trigger`, `approve`,
 `reject`, and `status` tools. The `trigger` tool now returns both the
 `workflow_id` and `run_id` of the started workflow. Pass these values to the

@@ -25,7 +25,7 @@ async def trigger(invoice: Dict) -> Dict[str, str]:
         id=f"invoice-{uuid.uuid4()}",
         task_queue="invoice-task-queue",
     )
-    return {"workflow_id": handle.id, "run_id": handle.run_id}
+    return {"workflow_id": handle.id, "run_id": handle.result_run_id}
 
 
 @mcp.tool()
