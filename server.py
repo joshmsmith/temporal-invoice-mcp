@@ -2,15 +2,16 @@ import os
 import uuid
 from typing import Dict
 
-from fastmcp import MCPServer, tool
+from mcp.server.fastmcp import FastMCP
 from temporalio.client import Client
 
 
 async def _client() -> Client:
     return await Client.connect(os.getenv("TEMPORAL_ADDRESS", "localhost:7233"))
 
+mcp = FastMCP("invoice_processor")
 
-@tool
+@mcp.tool()
 async def trigger(invoice: Dict) -> str:
     """Start the InvoiceWorkflow with the given invoice JSON."""
     client = await _client()
@@ -23,7 +24,7 @@ async def trigger(invoice: Dict) -> str:
     return handle.run_id
 
 
-@tool
+@mcp.tool()
 async def approve(run_id: str) -> str:
     """Signal approval for the invoice workflow."""
     client = await _client()
@@ -32,7 +33,7 @@ async def approve(run_id: str) -> str:
     return "APPROVED"
 
 
-@tool
+@mcp.tool()
 async def reject(run_id: str) -> str:
     """Signal rejection for the invoice workflow."""
     client = await _client()
@@ -41,7 +42,7 @@ async def reject(run_id: str) -> str:
     return "REJECTED"
 
 
-@tool
+@mcp.tool()
 async def status(run_id: str) -> str:
     """Return current status of the workflow."""
     client = await _client()
@@ -49,12 +50,5 @@ async def status(run_id: str) -> str:
     desc = await handle.describe()
     return desc.status.name
 
-
-server = MCPServer(
-    title="Invoice Tools",
-    description="Manage invoice workflows via MCP",
-    tools=[trigger, approve, reject, status],
-)
-
 if __name__ == "__main__":
-    server.run()
+    mcp.run(transport='stdio')

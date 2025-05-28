@@ -1,24 +1,28 @@
 # Invoice Demo with Temporal + MCP
 
 ## 1. Clone & install
+
 ```
  git clone https://github.com/your-org/temporal-mcp-invoice-demo.git
  cd temporal-mcp-invoice-demo
- pip install temporalio fastmcp mcp_tool click
+ uv pip install temporalio fastmcp
 ```
 
 ## 2. Launch Temporal locally
+
 ```
  temporal server start-dev
 ```
 
 ## 3. Start the worker
+
 ```
  export TEMPORAL_ADDRESS=localhost:7233
  python worker.py [--fail-validate] [--fail-payment]
 ```
 
 ## 4. Start the MCP server
+
 ```
  python server.py
 ```
