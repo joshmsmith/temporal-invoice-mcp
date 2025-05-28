@@ -26,7 +26,6 @@
 ## 3. Start the worker
 
 ```
- export TEMPORAL_ADDRESS=localhost:7233
  python worker.py [--fail-validate] [--fail-payment]
 ```
 
