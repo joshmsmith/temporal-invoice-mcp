@@ -23,11 +23,14 @@ async def payment_gateway(line: dict) -> bool:
             type="INSUFFICIENT_FUNDS",
             non_retryable=True,
         )
-    if not no_fail_payment and random.random() < 0.3:
+    if not no_fail_payment and random.random() < 0.1:
         raise ApplicationError(
             "INSUFFICIENT_FUNDS",
             type="INSUFFICIENT_FUNDS",
             non_retryable=True,
         )
+    # Simulate a retryable failure sometimes for payment processing
+    if random.random() < 0.3:
+        raise ApplicationError("PAYMENT_GATEWAY_ERROR", type="PAYMENT_GATEWAY_ERROR")
     activity.logger.info("Payment succeeded")
     return True

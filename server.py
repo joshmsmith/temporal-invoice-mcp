@@ -52,7 +52,9 @@ async def status(workflow_id: str, run_id: str) -> str:
     client = await _client()
     handle = client.get_workflow_handle(workflow_id=workflow_id, run_id=run_id)
     desc = await handle.describe()
-    return desc.status.name
+    status = await handle.query("GetInvoiceStatus")
+    return f"Invoice with ID {workflow_id} is currently {status}. " \
+           f"Workflow status: {desc.status.name}"
 
 
 if __name__ == "__main__":
