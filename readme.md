@@ -67,3 +67,24 @@ Use your MCP client (e.g., Claude Desktop) to call the `trigger`, `approve`,
 `approve`, `reject`, and `status` tools. The sample invoice lives at
 `samples/invoice_acme.json`. Inspect Temporal Web at `http://localhost:8233`.
 Kill and restart the worker at any time to observe deterministic replay.
+
+## 5. Results
+Claude submits the invoice workflow:
+
+<img src="./assets/claude-mcp-invoice-submission.png" width="50%" alt="Claude MCP Invoice Submission" style="display: block; margin: auto;">
+
+It can get status:
+
+<img src="./assets/claude-mcp-invoice-status.png" width="50%" alt="Claude MCP Status" style="display: block; margin: auto;">
+
+Claude + MCP can send inputs and updates to the process workflow such as approvals, or even do a combination of actions - all agentically, explaining in human analogies what's going on if you ask it to:
+
+<img src="./assets/claude-mcp-submit-approve-status.png" width="50%" alt="Claude MCP Combo" style="display: block; margin: auto;">
+
+### What's Cool About This:
+1. Agents and applications connected by  MCP can provide a powerful way for humans to interact with processes and applications
+    - (as long as the applications have an API to interact with)
+2. MCP tools don't have to be just one API call - you can get process status and even send it more information as it proceeds
+3. Temporal makes modeling a long-running, durable, interactive transaction simple to integrate with MCP
+
+<img src="./assets/interactive-workflows-with-agentic-power.png" width="80%" alt="Interactive Agentic Applications Powered By Workflows" style="display: block; margin: auto;">
