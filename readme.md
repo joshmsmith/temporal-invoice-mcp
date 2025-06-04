@@ -87,4 +87,4 @@ Claude + MCP can send inputs and updates to the process workflow such as approva
 2. MCP tools don't have to be just one API call - you can get process status and even send it more information as it proceeds
 3. Temporal makes modeling a long-running, durable, interactive transaction simple to integrate with MCP
 
-<img src="./assets/interactive-workflows-with-agentic-power.png" width="50%" alt="Interactive Agentic Applications Powered By Workflows" style="display: block; margin: auto;">
+<img src="./assets/interactive-workflows-with-agentic-power.png" width="80%" alt="Interactive Agentic Applications Powered By Workflows" style="display: block; margin: auto;">
