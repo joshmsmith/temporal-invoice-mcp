@@ -21,7 +21,7 @@ if [ "$(tmux list-panes -t "$SESSION" | wc -l)" -lt 2 ]; then
 fi
 
 # Run worker in second pane
-tmux send-keys -t "$SESSION":0.1 'source .bin/env/activate && python worker.py' C-m
+tmux send-keys -t "$SESSION":0.1 'source .venv/bin/activate && python worker.py' C-m
 
 # Attach to the session
 tmux select-pane -t "$SESSION":0.0
