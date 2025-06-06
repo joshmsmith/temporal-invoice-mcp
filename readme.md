@@ -29,6 +29,15 @@
  python worker.py [--fail-validate] [--fail-payment]
 ```
 
+## Quick demo boot
+
+Instead of starting the server and worker manually you can launch them in a
+`tmux` session using the `boot-demo.sh` helper script:
+
+```
+ ./boot-demo.sh
+```
+
 # Claude for Desktop Instructions (Sonnet 4)
 
 ## 1. Follow steps 1-3 above
