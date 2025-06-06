@@ -67,7 +67,7 @@ Instead of starting the server and worker manually you can launch them in a
 ## 4. To kick off processing the mock invoice, run:
 
 ```
-trigger samples/invoice_acme.json
+trigger <paste: samples/invoice_acme.json>
 ```
 
 Use your MCP client (e.g., Claude Desktop) to call the `trigger`, `approve`,
@@ -78,6 +78,7 @@ Use your MCP client (e.g., Claude Desktop) to call the `trigger`, `approve`,
 Kill and restart the worker at any time to observe deterministic replay.
 
 ## 5. Results
+
 Claude submits the invoice workflow:
 
 <img src="./assets/claude-mcp-invoice-submission.png" width="50%" alt="Claude MCP Invoice Submission" style="display: block; margin: auto;">
@@ -91,8 +92,9 @@ Claude + MCP can send inputs and updates to the process workflow such as approva
 <img src="./assets/claude-mcp-submit-approve-status.png" width="50%" alt="Claude MCP Combo" style="display: block; margin: auto;">
 
 ### What's Cool About This:
-1. Agents and applications connected by  MCP can provide a powerful way for humans to interact with processes and applications
-    - (as long as the applications have an API to interact with)
+
+1. Agents and applications connected by MCP can provide a powerful way for humans to interact with processes and applications
+   - (as long as the applications have an API to interact with)
 2. MCP tools don't have to be just one API call - you can get process status and even send it more information as it proceeds
 3. Temporal makes modeling a long-running, durable, interactive transaction simple to integrate with MCP
 
