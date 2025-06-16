@@ -2,7 +2,7 @@ import os
 import uuid
 from typing import Dict
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
 from temporalio.client import Client
 
 from workflows import InvoiceWorkflow
@@ -16,15 +16,26 @@ mcp = FastMCP("invoice_processor")
 
 
 @mcp.tool()
-async def trigger(invoice: Dict) -> Dict[str, str]:
+async def trigger(invoice: Dict, ctx: Context) -> Dict[str, str]:
+    await ctx.report_progress(progress=0.1, total=1.0)
+    await ctx.info("Starting invoice processing workflow")
     """Start the InvoiceWorkflow with the given invoice JSON."""
+    workflow_id = f"invoice-{uuid.uuid4()}"
     client = await _client()
     handle = await client.start_workflow(
         InvoiceWorkflow.run,
         invoice,
-        id=f"invoice-{uuid.uuid4()}",
+        id=workflow_id,
         task_queue="invoice-task-queue",
     )
+    await ctx.info("Invoice processing workflow started")
+    
+    desc = await handle.describe()
+    status = await handle.query("GetInvoiceStatus")
+    await ctx.report_progress(progress=1.0, total=1.0)
+    await ctx.info(f"Invoice processing workflow started with status {status}")
+    
+    
     return {"workflow_id": handle.id, "run_id": handle.result_run_id}
 
 
