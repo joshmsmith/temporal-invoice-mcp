@@ -9,7 +9,7 @@ from temporalio import workflow
 from temporalio.common import RetryPolicy
 from temporalio.exceptions import ActivityError, ApplicationError
 
-from activities import validate_against_erp, payment_gateway
+from activities import validate_against_erp, payment_gateway, callback
 
 
 def _parse_due_date(due: str) -> datetime:
@@ -138,12 +138,12 @@ class InvoiceWorkflow:
             self.status = "PAID"
         
         await workflow.execute_activity(
-            validate_against_erp,
+            callback,
             self.status,
             start_to_close_timeout=timedelta(seconds=30),
             retry_policy=RetryPolicy(
                 initial_interval=timedelta(seconds=1),
-                maximum_interval=timedelta(seconds=30),
+                maximum_interval=timedelta(seconds=10),
                 maximum_attempts=5,
             ),
         )
