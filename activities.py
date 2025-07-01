@@ -2,6 +2,7 @@ import os
 import random
 from temporalio import activity
 from temporalio.exceptions import ApplicationError
+from temporalio.client import Client
 
 
 @activity.defn
@@ -37,6 +38,17 @@ async def payment_gateway(line: dict) -> bool:
 
 @activity.defn
 async def callback(status: str) -> str:
-    
+    # Attempt to call back to the agent to notify them of the status
+    activity.logger.info("Callback with status: %s", status)
+    client = await Client.connect(os.getenv("TEMPORAL_ADDRESS", "localhost:7233"))
+    try:
+        signal_wf_id = "agent-workflow"
+        signal_name = "add_external_message"
+        handle = client.get_workflow_handle(workflow_id=signal_wf_id)
+        await handle.signal(signal_name, f"Invoice processing complete with status: {status}" )
+    except Exception as e:
+        activity.logger.error("Callback failed: %s", e)
+        raise ApplicationError(f"Callback failed: {e}")
+
     activity.logger.info("Callback succeeded")
     return "SUCCESS"

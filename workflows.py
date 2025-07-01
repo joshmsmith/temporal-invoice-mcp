@@ -137,13 +137,15 @@ class InvoiceWorkflow:
             workflow.logger.info("All line items paid successfully")
             self.status = "PAID"
         
+        # Attempt to call back to the agent to notify them of the status
+        # In a real system you'd want to get callback info from the workflow input
+        # and validate it before signaling back
         await workflow.execute_activity(
             callback,
             self.status,
-            start_to_close_timeout=timedelta(seconds=30),
             retry_policy=RetryPolicy(
                 initial_interval=timedelta(seconds=1),
-                maximum_interval=timedelta(seconds=10),
+                maximum_interval=timedelta(seconds=2),
                 maximum_attempts=5,
             ),
         )
