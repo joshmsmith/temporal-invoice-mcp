@@ -136,4 +136,16 @@ class InvoiceWorkflow:
         else:   
             workflow.logger.info("All line items paid successfully")
             self.status = "PAID"
+        
+        await workflow.execute_activity(
+            validate_against_erp,
+            self.status,
+            start_to_close_timeout=timedelta(seconds=30),
+            retry_policy=RetryPolicy(
+                initial_interval=timedelta(seconds=1),
+                maximum_interval=timedelta(seconds=30),
+                maximum_attempts=5,
+            ),
+        )
+
         return self.status

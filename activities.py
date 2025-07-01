@@ -34,3 +34,9 @@ async def payment_gateway(line: dict) -> bool:
         raise ApplicationError("PAYMENT_GATEWAY_ERROR", type="PAYMENT_GATEWAY_ERROR")
     activity.logger.info("Payment succeeded")
     return True
+
+@activity.defn
+async def callback(status: str) -> str:
+    
+    activity.logger.info("Callback succeeded")
+    return "SUCCESS"
